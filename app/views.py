@@ -41,14 +41,22 @@ def user_login(request):
             return HttpResponse("Somebody Tried to login but he failed")
     return render(request,'signup.html',)
 
+
+
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('app:signup'))
+
 def home(request,pk):
     user = User.objects.get(pk = pk)
     user_info = userinfo.objects.get(user = user)
-    all_posts = Post.objects.all()
+    all_posts = Post.objects.all().order_by('-pk')
+    all_users = userinfo.objects.all()
     context = {
         "user":user,
         "user_info":user_info,
         "all_posts":all_posts,
+        "all_users":all_users,
     }
     return render(request , 'home.html', context)
 
@@ -69,3 +77,13 @@ def makepost(request,pk):
         Post.objects.create(user=user , user_info = user_info , text = text , image = post_img , video = post_video , l =0 , c=0)
         print("Post Created Successfully")
         return HttpResponseRedirect(reverse('app:home' , args=(user.id,)))
+
+def likepost(request):
+    print("Hey I am working")
+    post_id = request.GET.get('post_id')
+    user_id = request.GET.get('user_id')
+    post = Post.objects.get(pk=post_id)
+    user = User.objects.get(pk=user_id)
+    post.l = post.l + 1
+    post.save()
+    return HttpResponse(post.l)

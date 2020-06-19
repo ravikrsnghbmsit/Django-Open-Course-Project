@@ -49,7 +49,7 @@
           <a href="#"><i class="fa fa-user" aria-hidden="true"></i>Profile</a>
         </li>
         <li>
-          <a href="#"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+          <a href="{% url 'app:user_logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
         </li>
       </ul>
 
@@ -101,9 +101,15 @@
           <img src="{{i.image.url}}" alt="">
         </div>
         {% endif %}
-        <div class="likes-comments">
-          <div class="like">
-              <i class="fa fa-thumbs-up" aria-hidden="true"></i><h5>Like ({{i.l}})</h5>
+        {% if i.video %}
+        <div class="post-video">
+          <video src="{{i.video.url}}" controls>
+          </video>
+        </div>
+        {% endif %}
+        <div class="likes-comments" data-catid={{user.id}}>
+          <div class="like" data-catid={{i.id}}>
+              <i class="fa fa-thumbs-up" aria-hidden="true"></i><h5 id="like{{i.id}}">Like ({{i.l}})</h5>
           </div>
           <div class="comment">
             <form class="" action="index.html" method="post">
@@ -125,29 +131,41 @@
       <div class="user-list">
 
         <h2>Users</h2>
+
+        {% for i in all_users %}
         <a class="post-maker">
           <div class="profile-pic">
-            <img src="images/download.jpg" alt="">
+            <img src="{{i.profile_pic.url}}" alt="">
           </div>
-          <h1>Ravi Kumar Singh</h1>
+          <h1>{{i.user.first_name}} {{i.user.last_name}}</h1>
         </a>
-        <a class="post-maker">
-          <div class="profile-pic">
-            <img src="images/download.jpg" alt="">
-          </div>
-          <h1>Ravi Kumar Singh</h1>
-        </a>
-        <a class="post-maker">
-          <div class="profile-pic">
-            <img src="images/download.jpg" alt="">
-          </div>
-          <h1>Ravi Kumar Singh</h1>
-        </a>
+        {% endfor %}
+
 
       </div>
 
     </section>
 
   <script src={% static 'js/home.js' %} ></script>
+  <script type="text/javascript">
+    $(".like").click(function(){
+      var catid,user;
+      catid = $(this).attr("data-catid");
+      user = $(".likes-comments").attr("data-catid");
+      $.ajax(
+        {
+          url:"/likepost/",
+          data:{
+            post_id:catid,
+            user_id:user,
+          },
+          success:function(data) {
+            var id = "like" + catid;
+            document.getElementById(id).innerHTML = "Likes(" + data +")";
+          }
+        }
+      )
+    })
+  </script>
   </body>
 </html>
