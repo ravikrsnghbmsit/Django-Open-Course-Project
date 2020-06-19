@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login,logout
@@ -52,11 +52,15 @@ def home(request,pk):
     user_info = userinfo.objects.get(user = user)
     all_posts = Post.objects.all().order_by('-pk')
     all_users = userinfo.objects.all()
+    all_comments = []
+    for p in all_posts:
+        all_comments.append(Comments.objects.filter(post=p).order_by('-pk'))
     context = {
         "user":user,
         "user_info":user_info,
         "all_posts":all_posts,
         "all_users":all_users,
+        "all_comments":all_comments,
     }
     return render(request , 'home.html', context)
 
@@ -79,7 +83,6 @@ def makepost(request,pk):
         return HttpResponseRedirect(reverse('app:home' , args=(user.id,)))
 
 def likepost(request):
-    print("Hey I am working")
     post_id = request.GET.get('post_id')
     user_id = request.GET.get('user_id')
     post = Post.objects.get(pk=post_id)
@@ -90,6 +93,23 @@ def likepost(request):
         likes.objects.filter(post=post).filter(user = user).delete()
         return HttpResponse(post.l)
     post.l = post.l + 1
-    likes.objects.create(user = user , post =post)
+    likes.objects.create(user = user , post = post)
     post.save()
     return HttpResponse(post.l)
+
+def comment(request):
+    post_id = request.GET.get('post_id')
+    user_id = request.GET.get('user_id')
+    body = request.GET.get('body')
+    post = Post.objects.get(pk=post_id)
+    post.c = post.c+ 1;
+    post.save()
+    user = User.objects.get(pk=user_id)
+    c = Comments.objects.create(user=user , post = post , body = body)
+    print("Comment object has been created")
+    l=[];
+    l.append(c.user.first_name)
+    l.append(c.user.last_name)
+    l.append(c.body)
+    l.append(post.c)
+    return JsonResponse(l,safe=False)

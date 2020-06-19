@@ -112,16 +112,24 @@
               <i class="fa fa-thumbs-up" aria-hidden="true"></i><h5 id="like{{i.id}}">Like ({{i.l}})</h5>
           </div>
           <div class="comment">
-            <form class="" action="index.html" method="post">
-              <input type="text" name="" value="" placeholder="Comment">
+            <form id="comment-form" method="post" enctype="multipart/form-data" data-catid={{i.id}}>
+              {% csrf_token %}
+              <input type="text" name="" value="" placeholder="Comment" id="comment{{i.id}}">
               <button type="submit" name="button">Post</button>
             </form>
           </div>
         </div>
-        <span>Comments ({{i.c}})</span>
-        <div class="recent-comments" id="">
-              <h4>Ravi Kumar Singh</h4>
-              <p>Hey</p>
+        <span id="n-comment{{i.id}}">Comments ({{i.c}})</span>
+        <div class="recent-comments" id="recent-comment{{i.id}}">
+          {% for c in all_comments %}
+            {% if forloop.parentloop.counter == forloop.counter %}
+              {% for cmt in c %}
+              <h4>{{cmt.user.first_name}} {{cmt.user.last_name}}</h4>
+              <p>{{cmt.body}}</p>
+              {% endfor %}
+              {% endif %}
+          {% endfor %}
+
         </div>
       </div>
     {% endfor %}
@@ -148,6 +156,8 @@
 
   <script src={% static 'js/home.js' %} ></script>
   <script type="text/javascript">
+
+
     $(".like").click(function(){
       var catid,user;
       catid = $(this).attr("data-catid");
@@ -166,6 +176,33 @@
         }
       )
     })
+
+    $(document).on('submit' , "#comment-form" , function(e){
+      e.preventDefault();
+      var catid,user,body;
+      catid = $(this).attr('data-catid');
+      user = $(".likes-comments").attr("data-catid");
+      body = document.getElementById('comment'+catid).value;
+      console.log(catid + " " + user + " "+ body);
+      $.ajax(
+        {
+          url:"/comment",
+          data:{
+            post_id:catid,
+            user_id:user,
+            body:body,
+          },
+          success:function(data){
+            document.getElementById("n-comment"+catid).innerHTML = "Comments(" + data[3] + ")";
+            document.getElementById("recent-comment"+catid).innerHTML = "<h4>" + data[0]+" "+data[1] +"</h4><p>"+data[2]+"</p>" + document.getElementById("recent-comment"+catid).innerHTML;
+            document.getElementById('comment'+catid).value = "";
+          }
+        }
+      )
+
+
+    })
+
   </script>
   </body>
 </html>

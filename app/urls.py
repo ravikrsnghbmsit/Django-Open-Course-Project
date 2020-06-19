@@ -10,4 +10,5 @@ urlpatterns = [
     path('home/<int:pk>/',views.home,name="home"),
     path('makepost/<int:pk>/',views.makepost,name="makepost"),
     path('likepost/',views.likepost,name="likepost"),
+    path('comment/',views.comment,name="comment"),
 ]
