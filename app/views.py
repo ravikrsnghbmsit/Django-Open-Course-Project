@@ -84,6 +84,12 @@ def likepost(request):
     user_id = request.GET.get('user_id')
     post = Post.objects.get(pk=post_id)
     user = User.objects.get(pk=user_id)
+    if likes.objects.filter(post = post).filter(user = user).exists():
+        post.l = post.l - 1;
+        post.save()
+        likes.objects.filter(post=post).filter(user = user).delete()
+        return HttpResponse(post.l)
     post.l = post.l + 1
+    likes.objects.create(user = user , post =post)
     post.save()
     return HttpResponse(post.l)

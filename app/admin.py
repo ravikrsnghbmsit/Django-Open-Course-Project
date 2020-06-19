@@ -4,3 +4,4 @@ from . models import *
 
 admin.site.register(userinfo)
 admin.site.register(Post)
+admin.site.register(likes)
