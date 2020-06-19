@@ -57,14 +57,14 @@
 
     <section class="post-container">
 
-      <form class="make-post" action="index.html" method="post">
-
+      <form class="make-post" method="post" enctype="multipart/form-data" action="{% url 'app:makepost' user.id %}">
+        {% csrf_token %}
         <div class="post-text">
           <div class="profile-pic">
-            <img src="images/download.jpg" alt="">
+            <img src="{{user_info.profile_pic.url}}" alt="">
           </div>
           <div class="text">
-            <input type="text" name="" value="" placeholder="What's on your mind ?">
+            <input type="text" name="text" value="" placeholder="What's on your mind ?">
           </div>
         </div>
 
@@ -74,32 +74,36 @@
           <ul>
             <li>
               <label for="image"><i class="fa fa-picture-o" aria-hidden="true"></i>Image</label>
-              <input type="file" name="" value="" id="image">
+              <input type="file" name="image" value="" id="image">
             </li>
             <li>
               <label for="video"><i class="fa fa-video-camera" aria-hidden="true"></i>Video</label>
-              <input type="file" name="" value="" id="video">
+              <input type="file" name="video" value="" id="video">
             </li>
           </ul>
         </div>
-        <button type="button" name="button">Post</button>
+        <button type="submit" name="button">Post</button>
 
       </form>
 
+
+      {% for i in all_posts %}
       <div class="post ">
         <div class="post-maker">
           <div class="profile-pic">
-            <img src="images/download.jpg" alt="">
+            <img src="{{i.user_info.profile_pic.url}}" alt="">
           </div>
-          <h1>Ravi Kumar Singh</h1>
+          <h1>{{i.user.first_name}} {{i.user.last_name}}</h1>
         </div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse ci</p>
+        <p>{{i.text}}</p>
+        {% if i.image %}
         <div class="post-img">
-          <img src="images/cover.jpg" alt="">
+          <img src="{{i.image.url}}" alt="">
         </div>
+        {% endif %}
         <div class="likes-comments">
           <div class="like">
-              <i class="fa fa-thumbs-up" aria-hidden="true"></i><h5>Like (100)</h5>
+              <i class="fa fa-thumbs-up" aria-hidden="true"></i><h5>Like ({{i.l}})</h5>
           </div>
           <div class="comment">
             <form class="" action="index.html" method="post">
@@ -108,48 +112,15 @@
             </form>
           </div>
         </div>
-        <span>Comments</span>
+        <span>Comments ({{i.c}})</span>
         <div class="recent-comments" id="">
               <h4>Ravi Kumar Singh</h4>
               <p>Hey</p>
         </div>
       </div>
+    {% endfor %}
 
-      <div class="post">
-        <div class="post-maker">
-          <div class="profile-pic">
-            <img src="images/download.jpg" alt="">
-          </div>
-          <h1>Ravi Kumar Singh</h1>
-        </div>
-        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse ci</p>
-        <div class="post-img">
-          <img src="images/cover.jpg" alt="">
-        </div>
-        <div class="likes-comments">
-          <div class="like">
-              <i class="fa fa-thumbs-up" aria-hidden="true" ></i><h5>Like (100)</h5>
-          </div>
-          <div class="comment">
-            <form class="" action="index.html" method="post">
-              <input type="text" name="" value="" placeholder="Comment">
-              <button type="submit" name="button">Post</button>
-            </form>
-          </div>
-        </div>
-        <span>Comments</span>
-        <div class="recent-comments">
-              <h4>Ravi Kumar Singh</h4>
-              <p>Hey</p>
 
-              <h4>Ravi Kumar Singh</h4>
-              <p>Hey</p>
-
-              <h4>Ravi Kumar Singh</h4>
-              <p>Hey</p>
-        </div>
-
-      </div>
 
       <div class="user-list">
 

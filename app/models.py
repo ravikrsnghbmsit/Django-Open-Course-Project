@@ -12,3 +12,16 @@ class userinfo(models.Model):
 
     def __str__(self):
         return self.user.username
+
+
+class Post(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    user_info = models.ForeignKey(userinfo,on_delete=models.CASCADE)
+    text = models.CharField(max_length=400,blank=True)
+    image = models.ImageField(upload_to='post-images/',null=True)
+    video = models.FileField(upload_to='post-videos/',null=True)
+    l = models.IntegerField(default = 0)
+    c= models.IntegerField(default = 0)
+
+    def __str__(self):
+        return self.user.first_name

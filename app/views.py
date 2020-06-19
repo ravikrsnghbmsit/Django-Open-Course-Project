@@ -44,8 +44,28 @@ def user_login(request):
 def home(request,pk):
     user = User.objects.get(pk = pk)
     user_info = userinfo.objects.get(user = user)
+    all_posts = Post.objects.all()
     context = {
         "user":user,
         "user_info":user_info,
+        "all_posts":all_posts,
     }
     return render(request , 'home.html', context)
+
+
+def makepost(request,pk):
+    user = User.objects.get(pk = pk)
+    user_info = userinfo.objects.get(user = user)
+    if request.method == 'POST':
+        text = request.POST.get('text')
+        try:
+            post_img = request.FILES['image']
+        except:
+            post_img = None
+        try:
+            post_video = request.FILES['video']
+        except:
+            post_video=None
+        Post.objects.create(user=user , user_info = user_info , text = text , image = post_img , video = post_video , l =0 , c=0)
+        print("Post Created Successfully")
+        return HttpResponseRedirect(reverse('app:home' , args=(user.id,)))
