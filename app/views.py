@@ -15,7 +15,7 @@ def signup(request):
         password = request.POST.get('password')
         birthday = request.POST.get('birthday')
         gender = request.POST.get('gender')
-        image =request.FILES['image']
+        image = request.FILES['image']
         user = User.objects.create(username = email , first_name = first_name ,last_name = last_name , email=email)
         print("User object is created")
         user.password = make_password(password)
@@ -23,7 +23,7 @@ def signup(request):
         print("Password Changed Successfully")
         userinfo.objects.create(user = user , Birthday = birthday , Gender = gender , profile_pic = image)
         print("UserInfo is Added")
-        return HttpResponseRedirect(reverse('app:home'))
+        return HttpResponseRedirect(reverse('app:home',args=(user.id,)))
     return render(request,'signup.html',)
 
 
@@ -35,11 +35,17 @@ def user_login(request):
         if user:
             login(request,user)
             print("User has logged in")
-            return HttpResponseRedirect(reverse('app:home'))
+            return HttpResponseRedirect(reverse('app:home',args=(user.id,)))
         else:
             print("Wrong password")
             return HttpResponse("Somebody Tried to login but he failed")
     return render(request,'signup.html',)
 
-def home(request):
-    return render(request , 'home.html',)
+def home(request,pk):
+    user = User.objects.get(pk = pk)
+    user_info = userinfo.objects.get(user = user)
+    context = {
+        "user":user,
+        "user_info":user_info,
+    }
+    return render(request , 'home.html', context)

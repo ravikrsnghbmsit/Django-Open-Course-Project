@@ -6,5 +6,5 @@ app_name = "app"
 urlpatterns = [
     path('',views.signup,),
     path('user_login/',views.user_login,name="login"),
-    path('home/',views.home,name="home"),
+    path('home/<int:pk>/',views.home,name="home"),
 ]
