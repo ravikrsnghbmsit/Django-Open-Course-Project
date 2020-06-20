@@ -137,3 +137,10 @@ def cover_pic_change(request,pk):
     user_info.cover_pic = request.FILES['cover_picture']
     user_info.save()
     return HttpResponseRedirect(reverse('app:profile' , args=(user.id,user.id,)))
+
+def profile_pic_change(request,pk):
+    user = User.objects.get(pk = pk)
+    user_info = userinfo.objects.get(user=user)
+    user_info.profile_pic = request.FILES['profile_img']
+    user_info.save()
+    return HttpResponseRedirect(reverse('app:profile' , args=(user.id,user.id,)))

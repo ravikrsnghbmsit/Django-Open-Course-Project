@@ -79,9 +79,9 @@
         <h1>No Cover Picture</h1>
         {% endif %}
         {% if in_user == view_user %}
-        <form class=""  method="post" enctype="multipart/form-data">
+        <form class=""  method="post" enctype="multipart/form-data" id="profile_pic_form" action="{% url 'app:profile_pic_change' in_user.id %}">
           {% csrf_token %}
-          <input type="file" name="" value="" id="profile_img">
+          <input type="file" name="profile_img" value="" id="profile_img">
           <label for="profile_img"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</label>
         </form>
         {% endif %}

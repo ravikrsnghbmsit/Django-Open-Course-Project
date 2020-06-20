@@ -25,3 +25,6 @@ function nobio(){
 $("#cover_picture").change(function(){
   document.getElementById('cover_pic_form').submit()
 });
+$("#profile_img").change(function(){
+  document.getElementById('profile_pic_form').submit()
+});
