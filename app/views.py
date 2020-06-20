@@ -121,11 +121,16 @@ def profile(request,pk,ppk):
     view_user = User.objects.get(pk=ppk)
     view_user_info = userinfo.objects.get(user=view_user)
 
+    all_posts = Post.objects.filter(user=view_user).order_by('-pk')
+    all_comments = Comments.objects.all().order_by('-pk')
+
     context = {
         'in_user':in_user,
         'in_user_info':in_user_info,
         'view_user':view_user,
         'view_user_info':view_user_info,
+        'all_posts':all_posts,
+        'all_comments':all_comments,
     }
 
     return render(request , 'profile.html', context)
@@ -144,3 +149,10 @@ def profile_pic_change(request,pk):
     user_info.profile_pic = request.FILES['profile_img']
     user_info.save()
     return HttpResponseRedirect(reverse('app:profile' , args=(user.id,user.id,)))
+
+def addbio(request,pk):
+    user = User.objects.get(pk = pk)
+    user_info = userinfo.objects.get(user=user)
+    user_info.about = request.POST.get('body')
+    user_info.save()
+    return HttpResponseRedirect(reverse('app:profile', args = (user.id , user.id)))

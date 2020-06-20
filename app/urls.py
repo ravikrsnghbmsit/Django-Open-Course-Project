@@ -14,4 +14,5 @@ urlpatterns = [
     path('profile/<int:pk>/<int:ppk>/',views.profile,name="profile"),
     path('cover_pic_change/<int:pk>/',views.cover_pic_change , name="cover_pic_change"),
     path('profile_pic_change/<int:pk>/',views.profile_pic_change , name="profile_pic_change"),
+    path('addbio/<int:pk>/',views.addbio,name = "addbio"),
 ]

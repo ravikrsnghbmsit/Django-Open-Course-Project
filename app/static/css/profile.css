@@ -206,6 +206,9 @@ header {
   padding-top: 8%;
   color: white;
 }
+.name-and-bio p {
+  margin-top: 15px;
+}
 .name-and-bio a {
   margin-top:20px;
   text-decoration: none;
