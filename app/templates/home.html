@@ -46,7 +46,7 @@
 
       <ul>
         <li>
-          <a href="#"><i class="fa fa-user" aria-hidden="true"></i>Profile</a>
+          <a href="{% url 'app:profile' user.id user.id %}"><i class="fa fa-user" aria-hidden="true"></i>Profile</a>
         </li>
         <li>
           <a href="{% url 'app:user_logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
@@ -141,7 +141,7 @@
         <h2>Users</h2>
 
         {% for i in all_users %}
-        <a class="post-maker">
+        <a href="{% url 'app:profile' user.id i.user.id %}" class="post-maker">
           <div class="profile-pic">
             <img src="{{i.profile_pic.url}}" alt="">
           </div>

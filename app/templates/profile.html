@@ -1,9 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
     <title>Profile</title>
-    <link rel="stylesheet" href="css/profile.css">
+    <link rel="stylesheet" href={% static 'css/profile.css' %}>
     <script src="https://use.fontawesome.com/9ec2186b0f.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
@@ -12,7 +13,7 @@
     <header class="">
       <div class="logo-container">
         <div class="logo">
-          <img src="images/fb.png" alt="">
+          <img src={% static 'images/fb.png' %} alt="">
         </div>
       </div>
       <div class="search-bar">
@@ -21,7 +22,7 @@
       <div class="nav">
         <ul>
           <li>
-            <a href="#"><i class="fa fa-home" aria-hidden="true"></i></a>
+            <a href="{% url 'app:home' in_user.id %}"><i class="fa fa-home" aria-hidden="true"></i></a>
           </li>
           <li>
             <a href="#"><i class="fa fa-play" aria-hidden="true"></i></a>
@@ -33,10 +34,10 @@
       </div>
       <div class="profile">
         <div class="profile-pic">
-          <img src="images/download.jpg" alt="">
+          <img src="{{in_user_info.profile_pic.url}}" alt="">
         </div>
         <div class="username">
-          <h3>Ravi Kumar</h3>
+          <h3>{{in_user.first_name}} {{in_user.last_name}}</h3>
         </div>
       </div>
     </header>
@@ -45,10 +46,10 @@
 
       <ul>
         <li>
-          <a href="#"><i class="fa fa-user" aria-hidden="true"></i>Profile</a>
+          <a href="{% url 'app:profile' in_user.id in_user.id %}"><i class="fa fa-user" aria-hidden="true"></i>Profile</a>
         </li>
         <li>
-          <a href="#"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
+          <a href="{% url 'app:user_logout' %}"><i class="fa fa-sign-out" aria-hidden="true"></i> Logout</a>
         </li>
       </ul>
 
@@ -57,29 +58,46 @@
     <section class="profile-container">
 
       <div class="cover-pic edit">
-        <img src="images/cover.jpg" alt="">
-        <a href="#">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-          Edit
-        </a>
+        {% if view_user_info.cover_pic %}
+        <img src="{{view_user_info.cover_pic.url}}" alt="">
+        {% else %}
+        <h1>No Cover Picture</h1>
+        {% endif %}
+        {% if in_user == view_user %}
+        <form class=""  method="post" enctype="multipart/form-data" id="cover_pic_form" action="{% url 'app:cover_pic_change' in_user.id %}">
+          {% csrf_token %}
+          <input type="file" name="cover_picture" value="" id="cover_picture">
+          <label for="cover_picture"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</label>
+        </form>
+        {% endif %}
       </div>
 
       <div class="profile-picture edit">
-        <img src="images/download.jpg" alt="">
-        <a href="#">
-          <i class="fa fa-pencil" aria-hidden="true"></i>
-          Edit
-        </a>
+        {% if view_user_info.profile_pic %}
+        <img src="{{view_user_info.profile_pic.url}}" alt="">
+        {% else %}
+        <h1>No Cover Picture</h1>
+        {% endif %}
+        {% if in_user == view_user %}
+        <form class=""  method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <input type="file" name="" value="" id="profile_img">
+          <label for="profile_img"><i class="fa fa-pencil" aria-hidden="true"></i>Edit</label>
+        </form>
+        {% endif %}
       </div>
 
       <div class="name-and-bio">
-        <h1>Ravi Kumar Singh</h1>
+        <h1>{{view_user.first_name}} {{view_user.last_name}}</h1>
+        <p>{{view_user_info.about}}</p>
+        {% if in_user == view_user %}
         <a onclick="addbio()" class="add-bio">Add Bio</a>
         <form class="" action="index.html" method="post">
           <textarea name="name" rows="8" placeholder="Describe Yourself "></textarea>
           <button type="button" name="button" class="add-btn">Add</button>
           <button type="button" name="button" onclick="nobio()">Cancel</button>
         </form>
+        {% endif %}
       </div>
 
       <div class="timeline">
@@ -88,13 +106,13 @@
         <div class="post ">
           <div class="post-maker">
             <div class="profile-pic">
-              <img src="images/download.jpg" alt="">
+              <img src="" alt="">
             </div>
             <h1>Ravi Kumar Singh</h1>
           </div>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse ci</p>
           <div class="post-img">
-            <img src="images/download.jpg" alt="">
+            <img src="" alt="">
           </div>
           <div class="likes-comments">
             <div class="like">
@@ -117,13 +135,13 @@
         <div class="post ">
           <div class="post-maker">
             <div class="profile-pic">
-              <img src="images/download.jpg" alt="">
+              <img src="" alt="">
             </div>
             <h1>Ravi Kumar Singh</h1>
           </div>
           <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse ci</p>
           <div class="post-img">
-            <img src="images/download.jpg" alt="">
+            <img src="" alt="">
           </div>
           <div class="likes-comments">
             <div class="like">
@@ -149,6 +167,6 @@
 
 
 
-      <script src="js/home.js" ></script>
+      <script src={% static 'js/home.js' %} ></script>
   </body>
 </html>

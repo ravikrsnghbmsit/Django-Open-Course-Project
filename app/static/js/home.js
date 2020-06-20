@@ -21,3 +21,7 @@ function nobio(){
   $(".name-and-bio form").css({"display":"none"});
   $(".add-bio").css({"display":"block"});
 }
+
+$("#cover_picture").change(function(){
+  document.getElementById('cover_pic_form').submit()
+});

@@ -113,3 +113,27 @@ def comment(request):
     l.append(c.body)
     l.append(post.c)
     return JsonResponse(l,safe=False)
+
+def profile(request,pk,ppk):
+    in_user = User.objects.get(pk=pk)
+    in_user_info = userinfo.objects.get(user=in_user)
+
+    view_user = User.objects.get(pk=ppk)
+    view_user_info = userinfo.objects.get(user=view_user)
+
+    context = {
+        'in_user':in_user,
+        'in_user_info':in_user_info,
+        'view_user':view_user,
+        'view_user_info':view_user_info,
+    }
+
+    return render(request , 'profile.html', context)
+
+
+def cover_pic_change(request,pk):
+    user = User.objects.get(pk = pk)
+    user_info = userinfo.objects.get(user=user)
+    user_info.cover_pic = request.FILES['cover_picture']
+    user_info.save()
+    return HttpResponseRedirect(reverse('app:profile' , args=(user.id,user.id,)))

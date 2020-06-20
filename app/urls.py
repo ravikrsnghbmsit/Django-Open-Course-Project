@@ -11,4 +11,6 @@ urlpatterns = [
     path('makepost/<int:pk>/',views.makepost,name="makepost"),
     path('likepost/',views.likepost,name="likepost"),
     path('comment/',views.comment,name="comment"),
+    path('profile/<int:pk>/<int:ppk>/',views.profile,name="profile"),
+    path('cover_pic_change/<int:pk>/',views.cover_pic_change , name="cover_pic_change"),
 ]
